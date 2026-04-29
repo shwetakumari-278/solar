@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Wonders | Galaxies</title>
+    <meta name="description" content="Explore the vast and mysterious expanses of the universe, focusing on the beauty and types of galaxies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-color: #05050e;
+    --text-main: #e8e8ed;
+    --text-muted: #a0a0b5;
+    --accent-1: #6a1b9a; /* Deep purple */
+    --accent-2: #304ffe; /* Bright blue */
+    --accent-glow: rgba(106, 27, 154, 0.4);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+h1, h2, h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+}
+
+/* Animations */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 20px var(--accent-glow); }
+    50% { box-shadow: 0 0 50px var(--accent-glow); }
+    100% { box-shadow: 0 0 20px var(--accent-glow); }
+}
+
+@keyframes panx {
+    0% { background-position: left; }
+    100% { background-position: right; }
+}
+
+/* Scroll Transition utilities */
+.fade-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+.fade-up.visible, .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.delay-1 { transition-delay: 0.2s; }
+.delay-2 { transition-delay: 0.4s; }
+.delay-3 { transition-delay: 0.6s; }
+
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url('file:///C:/Users/SHWETA%20KUMARI/.gemini/antigravity/brain/bc439a9f-07b1-4fb9-88b1-1e1be81f7696/spiral_galaxy_hero_1775708147697.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -1;
+    transform: scale(1.1); /* Prevent edge bleeding on fixed bg */
+}
+
+.hero-background::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(5,5,14,0.3) 0%, rgba(5,5,14,1) 100%);
+}
+
+.hero-content {
+    z-index: 1;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.hero h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    background: linear-gradient(135deg, #fff 0%, #a0a0b5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    text-shadow: 0px 4px 20px rgba(0,0,0,0.5);
+}
+
+.hero p {
+    font-size: clamp(1.1rem, 2vw, 1.5rem);
+    color: var(--text-muted);
+    margin-bottom: 40px;
+    font-weight: 300;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+    border-radius: 30px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: pulse-glow 3s infinite;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(48, 79, 254, 0.5);
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.6;
+}
+
+.scroll-indicator span {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.arrow {
+    width: 20px;
+    height: 20px;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(45deg);
+    animation: float 2s infinite ease-in-out;
+}
+
+/* Glassmorphism Card System */
+.card-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 3rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Main Content */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: -100px;
+    position: relative;
+    z-index: 2;
+    align-items: center;
+}
+
+.intro h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.intro p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+.intro-visual {
+    position: relative;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+}
+
+.orb-1 {
+    width: 200px;
+    height: 200px;
+    background: var(--accent-1);
+    top: 20%; left: 20%;
+    animation: float 6s infinite ease-in-out;
+}
+
+.orb-2 {
+    width: 150px;
+    height: 150px;
+    background: var(--accent-2);
+    bottom: 10%; right: 20%;
+    animation: float 8s infinite ease-in-out reverse;
+    opacity: 0.6;
+}
+
+/* Galaxy Types Section */
+.galaxy-types {
+    padding: 8rem 0;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 4rem;
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.type-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.4s ease;
+    cursor: default;
+}
+
+.type-card:hover {
+    transform: translateY(-15px);
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+    border-color: rgba(255,255,255,0.15);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(45deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.type-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.type-card p {
+    color: var(--text-muted);
+}
+
+/* Milky Way Showcase */
+.milky-way-showcase {
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-top: 4rem;
+    display: flex;
+    align-items: center;
+    min-height: 500px;
+}
+
+.milky-way-image {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('file:///C:/Users/SHWETA%20KUMARI/.gemini/antigravity/brain/bc439a9f-07b1-4fb9-88b1-1e1be81f7696/milky_way_landscape_1775708164420.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    transition: transform 10s ease;
+}
+
+.milky-way-showcase:hover .milky-way-image {
+    transform: scale(1.05);
+}
+
+.milky-way-content {
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    margin-left: 5%;
+    background: rgba(5, 5, 14, 0.6) !important; /* Overriding base glass slightly for text legibility over bright images */
+}
+
+.milky-way-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.milky-way-content p {
+    color: #e8e8ed;
+    font-size: 1.1rem;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 3rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .intro {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .intro-visual {
+        order: -1;
+        height: 200px;
+    }
+    .milky-way-showcase {
+        justify-content: center;
+        padding: 2rem;
+    }
+    .milky-way-content {
+        margin-left: 0;
+        text-align: center;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <header class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-content">
+            <h1 class="fade-up">Beyond the Stars</h1>
+            <p class="fade-up delay-1">Journey through the majestic structures of the cosmos.</p>
+            <a href="#explore" class="cta-button fade-up delay-2">Explore Galaxies</a>
+        </div>
+        <div class="scroll-indicator fade-up delay-3">
+            <span>Scroll</span>
+            <div class="arrow"></div>
+        </div>
+    </header>
+
+    <main id="explore">
+        <section class="intro card-glass fade-in parallax">
+            <div class="intro-text">
+                <h2>What is a Galaxy?</h2>
+                <p>A galaxy is a sprawling space system composed of dust, gas, and countless stars, all held together by gravity. Our own planet Earth is located within a spiral galaxy known as the Milky Way, just one of billions of galaxies in the observable universe.</p>
+            </div>
+            <div class="intro-visual">
+                <!-- Decorative element -->
+                <div class="floating-orb orb-1"></div>
+                <div class="floating-orb orb-2"></div>
+            </div>
+        </section>
+
+        <section class="galaxy-types">
+            <h2 class="section-title fade-in">Classifications of Galaxies</h2>
+            <div class="cards-container">
+                <article class="type-card fade-up">
+                    <div class="card-icon">🌀</div>
+                    <h3>Spiral Galaxies</h3>
+                    <p>Characterized by a central bulge surrounded by a flat, rotating disk of stars. Their striking spiral arms are regions of active star formation.</p>
+                </article>
+                <article class="type-card fade-up delay-1">
+                    <div class="card-icon">🥚</div>
+                    <h3>Elliptical Galaxies</h3>
+                    <p>Ranging from nearly spherical to elongated shapes, these galaxies contain older stars and very little gas and dust, meaning new star formation is rare.</p>
+                </article>
+                <article class="type-card fade-up delay-2">
+                    <div class="card-icon">✨</div>
+                    <h3>Irregular Galaxies</h3>
+                    <p>Lacking a distinct shape, these chaotic structures are often the result of gravitational interactions or collisions with other galaxies.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="milky-way-showcase">
+            <div class="milky-way-image"></div>
+            <div class="milky-way-content card-glass">
+                <h2>The Milky Way</h2>
+                <p>Our cosmic neighborhood. It measures about 100,000 light-years across and contains roughly 100 to 400 billion stars. At its core lies Sagittarius A*, a supermassive black hole.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Cosmic Wonders. Built for exploration.</p>
+    </footer>
+
+    <script>
+        // Simple Intersection Observer for scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up, .fade-in').forEach((el) => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

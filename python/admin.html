@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AuraStyle — Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --cream: #FAF7F2;
+  --cream-dark: #F2EDE4;
+  --gold: #C9A96E;
+  --gold-light: #E8D5B0;
+  --charcoal: #2A2520;
+  --charcoal-mid: #5C5048;
+  --charcoal-light: #9A8E85;
+  --white: #FFFFFF;
+  --border-gold: rgba(201,169,110,0.3);
+  --green: #1a6b4a;
+  --green-light: #e8f5f0;
+  --red: #c0392b;
+  --red-light: #fdf0ee;
+  --blue: #2980b9;
+  --blue-light: #eaf4fb;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--cream); color: var(--charcoal); min-height: 100vh; }
+
+/* ── LOGIN SCREEN ── */
+.login-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--charcoal);
+}
+.login-box {
+  background: var(--white);
+  padding: 52px 48px;
+  width: 400px;
+  border-top: 3px solid var(--gold);
+}
+.login-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 600; color: var(--charcoal);
+  letter-spacing: 2px; text-transform: uppercase;
+  text-align: center; margin-bottom: 6px;
+}
+.login-logo span { color: var(--gold); }
+.login-sub { text-align: center; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--charcoal-light); margin-bottom: 36px; }
+.login-field { margin-bottom: 18px; }
+.login-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--charcoal-mid); display: block; margin-bottom: 8px; }
+.login-input {
+  width: 100%; border: 1px solid var(--border-gold); background: var(--cream);
+  padding: 12px 16px; font-family: 'Jost', sans-serif; font-size: 14px;
+  color: var(--charcoal); outline: none; transition: border-color 0.2s;
+}
+.login-input:focus { border-color: var(--gold); }
+.login-btn {
+  width: 100%; background: var(--charcoal); color: var(--gold); border: none;
+  padding: 15px; font-family: 'Jost', sans-serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase; cursor: pointer; margin-top: 8px;
+  transition: background 0.2s;
+}
+.login-btn:hover { background: var(--charcoal-mid); }
+.login-error { font-size: 12px; color: var(--red); margin-top: 10px; text-align: center; display: none; }
+
+/* ── DASHBOARD ── */
+.dashboard { display: none; min-height: 100vh; }
+
+/* Top Nav */
+.admin-nav {
+  background: var(--charcoal);
+  padding: 0 40px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(201,169,110,0.2);
+  position: sticky; top: 0; z-index: 100;
+}
+.admin-nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 600; color: var(--white);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.admin-nav-logo span { color: var(--gold); }
+.admin-nav-tag {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); background: rgba(201,169,110,0.15);
+  padding: 4px 12px; border: 1px solid rgba(201,169,110,0.3);
+}
+.admin-nav-right { display: flex; align-items: center; gap: 20px; }
+.admin-live-dot {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 11px; color: #6ee7b7; letter-spacing: 0.5px;
+}
+.admin-live-dot::before {
+  content: ''; width: 7px; height: 7px;
+  background: #6ee7b7; border-radius: 50%;
+  animation: livePulse 1.5s ease infinite;
+}
+@keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.admin-logout {
+  background: none; border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5); padding: 7px 16px;
+  font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 1px;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+}
+.admin-logout:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Main Content */
+.admin-main { padding: 36px 40px; }
+
+/* Stats Row */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 20px; margin-bottom: 36px;
+}
+.stat-card {
+  background: var(--white); padding: 24px 28px;
+  border: 1px solid var(--border-gold);
+  border-left: 3px solid var(--gold);
+}
+.stat-label { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--charcoal-light); margin-bottom: 10px; }
+.stat-value { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 300; color: var(--charcoal); line-height: 1; margin-bottom: 6px; }
+.stat-sub { font-size: 12px; color: var(--charcoal-light); }
+
+/* Section Header */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 400; color: var(--charcoal);
+}
+.section-title em { font-style: italic; color: var(--gold); }
+.section-actions { display: flex; gap: 12px; align-items: center; }
+
+/* Filter Tabs */
+.filter-tabs { display: flex; gap: 0; border: 1px solid var(--border-gold); }
+.filter-tab {
+  padding: 8px 18px; font-family: 'Jost', sans-serif;
+  font-size: 11px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; background: var(--white); border: none;
+  color: var(--charcoal-light); transition: all 0.2s;
+  border-right: 1px solid var(--border-gold);
+}
+.filter-tab:last-child { border-right: none; }
+.filter-tab.active { background: var(--charcoal); color: var(--gold); }
+.filter-tab:hover:not(.active) { background: var(--cream); color: var(--charcoal); }
+
+/* Clear btn */
+.clear-btn {
+  background: none; border: 1px solid var(--border-gold);
+  color: var(--charcoal-light); padding: 8px 16px;
+  font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 1px;
+  text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+}
+.clear-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* Orders Table */
+.orders-table-wrap {
+  background: var(--white);
+  border: 1px solid var(--border-gold);
+  overflow: hidden;
+}
+.orders-table {
+  width: 100%; border-collapse: collapse;
+}
+.orders-table thead tr {
+  background: var(--charcoal);
+}
+.orders-table thead th {
+  padding: 14px 20px; text-align: left;
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gold);
+}
+.orders-table tbody tr {
+  border-bottom: 1px solid var(--border-gold);
+  transition: background 0.15s;
+}
+.orders-table tbody tr:last-child { border-bottom: none; }
+.orders-table tbody tr:hover { background: var(--cream); }
+.orders-table td {
+  padding: 16px 20px; font-size: 13px; color: var(--charcoal-mid);
+  vertical-align: top;
+}
+.order-id { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; color: var(--charcoal); }
+.order-time { font-size: 11px; color: var(--charcoal-light); margin-top: 3px; }
+.order-items-list { font-size: 12px; line-height: 1.8; color: var(--charcoal-mid); }
+.order-total { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--charcoal); }
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; font-size: 11px; font-weight: 500;
+  letter-spacing: 1px; text-transform: uppercase; border-radius: 1px;
+  cursor: pointer; border: none; font-family: 'Jost', sans-serif;
+  transition: all 0.2s;
+}
+.status-badge.New { background: var(--blue-light); color: var(--blue); }
+.status-badge.Processing { background: #fef9e7; color: #d4ac0d; }
+.status-badge.Shipped { background: var(--green-light); color: var(--green); }
+.status-badge.Delivered { background: #eafaf1; color: #1e8449; }
+.status-badge.Cancelled { background: var(--red-light); color: var(--red); }
+
+/* Empty State */
+.orders-empty {
+  text-align: center; padding: 80px 40px;
+}
+.orders-empty h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--charcoal); margin-bottom: 10px; }
+.orders-empty p { font-size: 13px; color: var(--charcoal-light); }
+
+/* Status dropdown */
+.status-select {
+  border: 1px solid var(--border-gold); background: var(--cream);
+  color: var(--charcoal); padding: 6px 10px;
+  font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: 1px;
+  cursor: pointer; outline: none;
+}
+
+/* Toast */
+.admin-toast {
+  position: fixed; bottom: 28px; right: 28px; z-index: 999;
+  background: var(--charcoal); color: var(--white);
+  padding: 13px 22px; font-size: 13px;
+  border-left: 3px solid var(--gold);
+  transform: translateY(60px); opacity: 0;
+  transition: all 0.3s; min-width: 260px;
+}
+.admin-toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="admin-toast" id="admin-toast"></div>
+
+<!-- ── LOGIN SCREEN ── -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Aura<span>Style</span></div>
+    <div class="login-sub">Admin Dashboard</div>
+    <div class="login-field">
+      <label class="login-label">Username</label>
+      <input class="login-input" type="text" id="login-user" placeholder="Enter username" onkeydown="if(event.key==='Enter') doLogin()"/>
+    </div>
+    <div class="login-field">
+      <label class="login-label">Password</label>
+      <input class="login-input" type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter') doLogin()"/>
+    </div>
+    <button class="login-btn" onclick="doLogin()">Login to Dashboard</button>
+    <div class="login-error" id="login-error">Incorrect username or password</div>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div class="dashboard" id="dashboard">
+
+  <!-- Nav -->
+  <nav class="admin-nav">
+    <div class="admin-nav-logo">Aura<span>Style</span></div>
+    <div class="admin-nav-tag">Admin Panel</div>
+    <div class="admin-nav-right">
+      <div class="admin-live-dot">Live Updates On</div>
+      <button class="admin-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <div class="admin-main">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-sub">All time</div>
+      </div>
+      <div class="stat-card" style="border-left-color: var(--blue)">
+        <div class="stat-label">New Orders</div>
+        <div class="stat-value" id="stat-new">0</div>
+        <div class="stat-sub">Awaiting action</div>
+      </div>
+      <div class="stat-card" style="border-left-color: var(--green)">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value" id="stat-revenue">₹0</div>
+        <div class="stat-sub">All orders</div>
+      </div>
+      <div class="stat-card" style="border-left-color: #d4ac0d">
+        <div class="stat-label">Avg Order Value</div>
+        <div class="stat-value" id="stat-avg">₹0</div>
+        <div class="stat-sub">Per order</div>
+      </div>
+    </div>
+
+    <!-- Orders Section -->
+    <div class="section-header">
+      <div class="section-title">All <em>Orders</em></div>
+      <div class="section-actions">
+        <div class="filter-tabs" id="filter-tabs">
+          <button class="filter-tab active" onclick="filterOrders('All', this)">All</button>
+          <button class="filter-tab" onclick="filterOrders('New', this)">New</button>
+          <button class="filter-tab" onclick="filterOrders('Processing', this)">Processing</button>
+          <button class="filter-tab" onclick="filterOrders('Shipped', this)">Shipped</button>
+          <button class="filter-tab" onclick="filterOrders('Delivered', this)">Delivered</button>
+          <button class="filter-tab" onclick="filterOrders('Cancelled', this)">Cancelled</button>
+        </div>
+        <button class="clear-btn" onclick="clearAllOrders()">Clear All</button>
+      </div>
+    </div>
+
+    <div class="orders-table-wrap">
+      <div id="orders-container"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── CREDENTIALS (change these to whatever you want) ──
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'aurastyle123';
+
+// ── LOGIN ──
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value.trim();
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadDashboard();
+    // Auto refresh every 5 seconds for real-time updates
+    setInterval(loadDashboard, 5000);
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+
+// ── LOAD DASHBOARD ──
+let currentFilter = 'All';
+
+function loadDashboard() {
+  const orders = JSON.parse(localStorage.getItem('aura_orders') || '[]');
+  updateStats(orders);
+  renderOrders(orders, currentFilter);
+}
+
+// ── STATS ──
+function updateStats(orders) {
+  const total = orders.length;
+  const newOrders = orders.filter(o => o.status === 'New').length;
+  const revenue = orders.reduce((s, o) => s + o.total, 0);
+  const avg = total > 0 ? Math.round(revenue / total) : 0;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-new').textContent = newOrders;
+  document.getElementById('stat-revenue').textContent = '₹' + revenue.toLocaleString('en-IN');
+  document.getElementById('stat-avg').textContent = '₹' + avg.toLocaleString('en-IN');
+}
+
+// ── RENDER ORDERS ──
+function renderOrders(orders, filter) {
+  const filtered = filter === 'All' ? orders : orders.filter(o => o.status === filter);
+  const container = document.getElementById('orders-container');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="orders-empty">
+        <h3>No orders yet</h3>
+        <p>${filter === 'All' ? 'Orders will appear here in real time when customers checkout' : 'No orders with status: ' + filter}</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Date & Time</th>
+          <th>Items Ordered</th>
+          <th>Total</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="orders-body"></tbody>
+    </table>`;
+
+  const tbody = document.getElementById('orders-body');
+  filtered.forEach((order, idx) => {
+    const date = new Date(order.timestamp);
+    const dateStr = date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    const timeStr = date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    const itemsHtml = order.items.map(i =>
+      `${i.name} (${i.size}) × ${i.qty} — ₹${i.total.toLocaleString('en-IN')}`
+    ).join('<br>');
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="order-id">${order.id}</div>
+      </td>
+      <td>
+        <div>${dateStr}</div>
+        <div class="order-time">${timeStr}</div>
+      </td>
+      <td><div class="order-items-list">${itemsHtml}</div></td>
+      <td><div class="order-total">₹${order.total.toLocaleString('en-IN')}</div></td>
+      <td>
+        <select class="status-select" onchange="updateStatus('${order.id}', this.value)">
+          ${['New','Processing','Shipped','Delivered','Cancelled'].map(s =>
+            `<option value="${s}" ${s === order.status ? 'selected' : ''}>${s}</option>`
+          ).join('')}
+        </select>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ── FILTER ORDERS ──
+function filterOrders(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  loadDashboard();
+}
+
+// ── UPDATE STATUS ──
+function updateStatus(orderId, newStatus) {
+  const orders = JSON.parse(localStorage.getItem('aura_orders') || '[]');
+  const idx = orders.findIndex(o => o.id === orderId);
+  if (idx !== -1) {
+    orders[idx].status = newStatus;
+    localStorage.setItem('aura_orders', JSON.stringify(orders));
+    loadDashboard();
+    showAdminToast(`Order ${orderId} updated to "${newStatus}"`);
+  }
+}
+
+// ── CLEAR ALL ORDERS ──
+function clearAllOrders() {
+  if (confirm('Are you sure you want to delete ALL orders? This cannot be undone.')) {
+    localStorage.removeItem('aura_orders');
+    loadDashboard();
+    showAdminToast('All orders cleared');
+  }
+}
+
+// ── TOAST ──
+let adminToastTimer;
+function showAdminToast(msg) {
+  const t = document.getElementById('admin-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(adminToastTimer);
+  adminToastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

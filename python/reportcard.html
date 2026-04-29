@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f5f5;padding:15px}
+.page{background:#fff;width:750px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid #e0e0e0}
+.header{background:#1a237e;color:#fff;padding:24px 28px}
+.school{font-size:12px;opacity:0.75;margin-bottom:4px;letter-spacing:0.05em;text-transform:uppercase}
+.school-name{font-size:19px;font-weight:700;margin-bottom:14px}
+.student-row{display:flex;align-items:center;gap:14px}
+.avatar{width:50px;height:50px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:#1a237e;flex-shrink:0}
+.student-name{font-size:21px;font-weight:700}
+.student-meta{font-size:12px;opacity:0.75;margin-top:2px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #e8e8e8}
+.metric{padding:14px;text-align:center;border-right:1px solid #e8e8e8}
+.metric:last-child{border-right:none}
+.metric-val{font-size:24px;font-weight:700;color:#1a237e}
+.metric-lbl{font-size:11px;color:#888;margin-top:2px;text-transform:uppercase;letter-spacing:0.04em}
+.section{padding:18px 28px;border-bottom:1px solid #f0f0f0}
+.section-title{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+.subject-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.subject-name{font-size:13px;color:#333;width:88px;flex-shrink:0}
+.bar-wrap{flex:1;background:#f0f0f0;border-radius:4px;height:8px;overflow:hidden}
+.bar{height:8px;border-radius:4px}
+.subject-score{font-size:13px;font-weight:700;color:#333;width:44px;text-align:right;flex-shrink:0}
+.subject-pct{font-size:12px;color:#888;width:34px;text-align:right;flex-shrink:0}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #f0f0f0}
+.bottom-card{padding:18px 28px}
+.bottom-card:first-child{border-right:1px solid #f0f0f0}
+.exam-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #f7f7f7}
+.exam-row:last-child{border-bottom:none}
+.exam-lbl{color:#666}
+.exam-val{font-weight:700;color:#1a237e}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.badge-green{background:#e8f5e9;color:#2e7d32}
+.badge-red{background:#ffebee;color:#c62828}
+.remark-box{margin:0 28px 18px;background:#f8f9ff;border-left:3px solid #1a237e;padding:10px 14px;border-radius:0 6px 6px 0}
+.remark-text{font-size:13px;color:#444;line-height:1.7}
+.charts-section{padding:18px 28px;border-bottom:1px solid #f0f0f0}
+.chart-block{margin-bottom:24px;background:#f8f9ff;border-radius:8px;padding:12px 16px}
+.chart-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px}
+.chart-wrap{position:relative;height:130px;width:100%}
+.footer{background:#f8f8f8;padding:12px 28px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee}
+.footer-text{font-size:11px;color:#aaa}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="school">Academic Year 2024–25 · Class 9</div>
+    <div class="school-name">St. Xavier's School, Mohali</div>
+    <div class="student-row">
+      <div class="avatar">{{substring(1.Name; 0; 1)}}{{substring(1.Name; indexOf(1.Name; ) + 1; 1)}}</div>
+      <div>
+        <div class="student-name">{{1.Name}}</div>
+        <div class="student-meta">Roll No. {{1.`Roll No`}} &nbsp;·&nbsp; Class 9 &nbsp;·&nbsp; St. Xavier's School</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-val">{{get(split(6.response; "|"); 7)}}</div>
+      <div class="metric-lbl">Overall / 100</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" style="color:#2e7d32">{{get(split(6.response; "|"); 7)}}%</div>
+      <div class="metric-lbl">Percentage</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" style="color:#7b1fa2">{{get(split(6.response; "|"); 8)}}</div>
+      <div class="metric-lbl">Grade</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" style="color:#2e7d32">{{get(split(6.response; "|"); 9)}}</div>
+      <div class="metric-lbl">Result</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Subject-wise performance</div>
+    <div class="subject-row">
+      <div class="subject-name">Maths</div>
+      <div class="bar-wrap"><div class="bar" style="width:{{get(split(6.response; "|"); 1)}}%;background:#1565c0"></div></div>
+      <div class="subject-score">{{get(split(6.response; "|"); 1)}}</div>
+      <div class="subject-pct">{{get(split(6.response; "|"); 1)}}%</div>
+    </div>
+    <div class="subject-row">
+      <div class="subject-name">Science</div>
+      <div class="bar-wrap"><div class="bar" style="width:{{get(split(6.response; "|"); 2)}}%;background:#00838f"></div></div>
+      <div class="subject-score">{{get(split(6.response; "|"); 2)}}</div>
+      <div class="subject-pct">{{get(split(6.response; "|"); 2)}}%</div>
+    </div>
+    <div class="subject-row">
+      <div class="subject-name">English</div>
+      <div class="bar-wrap"><div class="bar" style="width:{{get(split(6.response; "|"); 3)}}%;background:#6a1b9a"></div></div>
+      <div class="subject-score">{{get(split(6.response; "|"); 3)}}</div>
+      <div class="subject-pct">{{get(split(6.response; "|"); 3)}}%</div>
+    </div>
+    <div class="subject-row">
+      <div class="subject-name">Hindi</div>
+      <div class="bar-wrap"><div class="bar" style="width:{{get(split(6.response; "|"); 4)}}%;background:#2e7d32"></div></div>
+      <div class="subject-score">{{get(split(6.response; "|"); 4)}}</div>
+      <div class="subject-pct">{{get(split(6.response; "|"); 4)}}%</div>
+    </div>
+    <div class="subject-row">
+      <div class="subject-name">SST</div>
+      <div class="bar-wrap"><div class="bar" style="width:{{get(split(6.response; "|"); 5)}}%;background:#e65100"></div></div>
+      <div class="subject-score">{{get(split(6.response; "|"); 5)}}</div>
+      <div class="subject-pct">{{get(split(6.response; "|"); 5)}}%</div>
+    </div>
+    <div class="subject-row">
+      <div class="subject-name">Computer</div>
+      <div class="bar-wrap"><div class="bar" style="width:{{get(split(6.response; "|"); 6)}}%;background:#1b5e20"></div></div>
+      <div class="subject-score">{{get(split(6.response; "|"); 6)}}</div>
+      <div class="subject-pct">{{get(split(6.response; "|"); 6)}}%</div>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="bottom-card">
+      <div class="section-title">Exam breakdown</div>
+      <div class="exam-row"><span class="exam-lbl">Unit Test 1 avg</span><span class="exam-val">{{get(split(6.response; "|"); 10)}} / 20</span></div>
+      <div class="exam-row"><span class="exam-lbl">Midterm avg</span><span class="exam-val">{{get(split(6.response; "|"); 11)}} / 50</span></div>
+      <div class="exam-row"><span class="exam-lbl">Unit Test 2 avg</span><span class="exam-val">{{get(split(6.response; "|"); 12)}} / 20</span></div>
+      <div class="exam-row"><span class="exam-lbl">Final exam avg</span><span class="exam-val">{{get(split(6.response; "|"); 13)}} / 100</span></div>
+    </div>
+    <div class="bottom-card">
+      <div class="section-title">Highlights</div>
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;color:#888;margin-bottom:5px">Best subject</div>
+        <span class="badge badge-green">{{get(split(6.response; "|"); 14)}}</span>
+      </div>
+      <div>
+        <div style="font-size:11px;color:#888;margin-bottom:5px">Needs focus</div>
+        <span class="badge badge-red">{{get(split(6.response; "|"); 15)}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="remark-box">
+    <div class="remark-text">{{get(split(6.response; "|"); 16)}}</div>
+  </div>
+
+  <div class="charts-section">
+    <div class="section-title">Exam-wise progress per subject (%)</div>
+    <div style="font-size:11px;color:#888;margin-bottom:16px">X-axis: UT1 → Midterm → UT2 → Final &nbsp;|&nbsp; Y-axis: Score %</div>
+
+    <div class="chart-block">
+      <div class="chart-label" style="color:#1565c0">Maths</div>
+      <div class="chart-wrap"><canvas id="c1"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <div class="chart-label" style="color:#00838f">Science</div>
+      <div class="chart-wrap"><canvas id="c2"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <div class="chart-label" style="color:#6a1b9a">English</div>
+      <div class="chart-wrap"><canvas id="c3"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <div class="chart-label" style="color:#2e7d32">Hindi</div>
+      <div class="chart-wrap"><canvas id="c4"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <div class="chart-label" style="color:#e65100">SST</div>
+      <div class="chart-wrap"><canvas id="c5"></canvas></div>
+    </div>
+    <div class="chart-block">
+      <div class="chart-label" style="color:#1b5e20">Computer</div>
+      <div class="chart-wrap"><canvas id="c6"></canvas></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">Generated automatically · St. Xavier's School, Mohali</div>
+    <div class="footer-text">Academic Year 2024–25 · Confidential</div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<script>
+Chart.register(ChartDataLabels);
+var r = "{{6.response}}".split("|");
+var labels = ["UT1","Midterm","UT2","Final"];
+var denoms = ["20","50","20","100"];
+var colors = ["#1565c0","#00838f","#6a1b9a","#2e7d32","#e65100","#1b5e20"];
+
+var pct = [
+  [parseFloat(r[16]),parseFloat(r[17]),parseFloat(r[18]),parseFloat(r[19])],
+  [parseFloat(r[20]),parseFloat(r[21]),parseFloat(r[22]),parseFloat(r[23])],
+  [parseFloat(r[24]),parseFloat(r[25]),parseFloat(r[26]),parseFloat(r[27])],
+  [parseFloat(r[28]),parseFloat(r[29]),parseFloat(r[30]),parseFloat(r[31])],
+  [parseFloat(r[32]),parseFloat(r[33]),parseFloat(r[34]),parseFloat(r[35])],
+  [parseFloat(r[36]),parseFloat(r[37]),parseFloat(r[38]),parseFloat(r[39])]
+];
+
+var raw = [
+  [r[40],r[41],r[42],r[43]],
+  [r[44],r[45],r[46],r[47]],
+  [r[48],r[49],r[50],r[51]],
+  [r[52],r[53],r[54],r[55]],
+  [r[56],r[57],r[58],r[59]],
+  [r[60],r[61],r[62],r[63]]
+];
+
+var cfg = function(data, rawData, color) {
+  var valid = data.filter(function(v){ return !isNaN(v); });
+  var minVal = Math.max(0, Math.floor((Math.min.apply(null,valid) - 20) / 10) * 10);
+  var maxVal = Math.min(100, Math.ceil((Math.max.apply(null,valid) + 20) / 10) * 10);
+  return {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        borderColor: color,
+        backgroundColor: color + "18",
+        borderWidth: 2.5,
+        pointRadius: 7,
+        pointBackgroundColor: color,
+        pointBorderColor: "#fff",
+        pointBorderWidth: 2,
+        fill: true,
+        tension: 0.35
+      }]
+    },
+    options: {
+      animation: false,
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { display: false },
+        datalabels: {
+          align: "top",
+          anchor: "top",
+          offset: 6,
+          font: { size: 10, weight: "bold" },
+          color: color,
+          formatter: function(value, ctx) {
+            var i = ctx.dataIndex;
+            return rawData[i] + "/" + denoms[i];
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: minVal,
+          max: maxVal,
+          ticks: {
+            font: { size: 10 },
+            callback: function(v) { return v + "%"; }
+          },
+          grid: { color: "#f0f0f0" }
+        },
+        x: {
+          ticks: { font: { size: 11 }, maxRotation: 0 },
+          grid: { display: false }
+        }
+      },
+      layout: { padding: { top: 28, right: 16 } }
+    }
+  };
+};
+
+for(var i = 0; i < 6; i++) {
+  new Chart(document.getElementById("c"+(i+1)), cfg(pct[i], raw[i], colors[i]));
+}
+</script>
+</body>
+</html>

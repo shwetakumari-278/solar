@@ -1,0 +1,51 @@
+<!DOCTYPE html><html><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1">
+<title>Food Calorie Estimator</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,sans-serif;background:#f0f4f8;padding:20px}
+.wrap{max-width:480px;margin:0 auto}h1{text-align:center;color:#1a1a2e;font-size:24px;margin-bottom:6px}
+.sub{text-align:center;color:#666;font-size:14px;margin-bottom:24px}
+.upbox{background:white;border:2px dashed #4CAF50;border-radius:16px;padding:40px 20px;text-align:center;cursor:pointer;margin-bottom:16px}
+.upbox:hover{background:#f9fff9}.icon{font-size:48px;margin-bottom:12px}.ut{color:#444;font-size:16px;font-weight:500}
+.us{color:#999;font-size:13px;margin-top:4px}#fi{display:none}
+#prev{width:100%;max-height:280px;object-fit:cover;border-radius:12px;display:none;margin-bottom:16px}
+.btn{width:100%;padding:16px;background:#4CAF50;color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer}
+.btn:disabled{background:#aaa}.card{background:white;border-radius:16px;padding:20px;margin-top:16px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.fn{font-size:22px;font-weight:700;color:#1a1a2e;margin-bottom:4px}.conf{font-size:13px;color:#4CAF50;font-weight:600;margin-bottom:16px}
+.calbox{background:linear-gradient(135deg,#4CAF50,#2e7d32);border-radius:12px;padding:20px;text-align:center;margin-bottom:16px}
+.caln{font-size:48px;font-weight:800;color:white}.call{font-size:14px;color:rgba(255,255,255,.85);margin-top:2px}
+.macros{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.mac{background:#f8f9fa;border-radius:10px;padding:12px;text-align:center}.mv{font-size:20px;font-weight:700}
+.mn{font-size:12px;color:#888;margin-top:2px}.prot .mv{color:#2196F3}.carb .mv{color:#FF9800}.fat .mv{color:#f44336}
+.br{margin-bottom:10px}.bl{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.bb{background:#eee;border-radius:99px;height:8px;overflow:hidden}.bf{height:100%;border-radius:99px;transition:width 1s ease}
+.load{text-align:center;padding:30px;color:#666;display:none}.spin{width:40px;height:40px;border:4px solid #eee;border-top-color:#4CAF50;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}.ot{font-size:13px;color:#888;margin:12px 0 8px}
+.oi{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid #f0f0f0;color:#555}</style></head>
+<body><div class=wrap><h1>Food Calorie Estimator</h1><p class=sub>Upload a food photo for instant nutrition info</p>
+<div class=upbox onclick="document.getElementById('fi').click()"><div class=icon>📷</div>
+<div class=ut>Tap to upload a food photo</div><div class=us>JPG or PNG from camera or gallery</div></div>
+<input type=file id=fi accept=image/* onchange=previewImg(event)>
+<img id=prev><button class=btn id=btn onclick=analyze() disabled>Analyze Food</button>
+<div class=load id=load><div class=spin></div>Identifying food and fetching nutrition data...</div>
+<div id=result></div></div>
+<script>
+let file=null;
+function previewImg(e){file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>{const p=document.getElementById('prev');p.src=ev.target.result;p.style.display='block';document.getElementById('btn').disabled=false};r.readAsDataURL(file)}
+async function analyze(){if(!file)return;document.getElementById('btn').disabled=true;document.getElementById('load').style.display='block';document.getElementById('result').innerHTML='';
+const fd=new FormData();fd.append('image',file);
+try{const res=await fetch('/predict',{method:'POST',body:fd});const d=await res.json();
+document.getElementById('load').style.display='none';document.getElementById('btn').disabled=false;
+if(d.error){document.getElementById('result').innerHTML=`<p style=color:red;text-align:center;padding:20px>${d.error}</p>`;return;}
+const n=d.nutrition;
+document.getElementById('result').innerHTML=`<div class=card><div class=fn>${d.food}</div><div class=conf>Confidence: ${d.confidence}%</div>
+<div class=calbox><div class=caln>${n.calories}</div><div class=call>Calories per 100g</div></div>
+<div class=macros><div class="mac prot"><div class=mv>${n.protein}g</div><div class=mn>Protein</div></div>
+<div class="mac carb"><div class=mv>${n.carbs}g</div><div class=mn>Carbs</div></div>
+<div class="mac fat"><div class=mv>${n.fat}g</div><div class=mn>Fat</div></div></div>
+<div class=br><div class=bl><span>Protein</span><span>${n.protein}g</span></div><div class=bb><div class=bf style="width:${Math.min(n.protein*4,100)}%;background:#2196F3"></div></div></div>
+<div class=br><div class=bl><span>Carbs</span><span>${n.carbs}g</span></div><div class=bb><div class=bf style="width:${Math.min(n.carbs*1.5,100)}%;background:#FF9800"></div></div></div>
+<div class=br><div class=bl><span>Fat</span><span>${n.fat}g</span></div><div class=bb><div class=bf style="width:${Math.min(n.fat*3,100)}%;background:#f44336"></div></div></div>
+<div class=br><div class=bl><span>Fiber</span><span>${n.fiber}g</span></div><div class=bb><div class=bf style="width:${Math.min(n.fiber*8,100)}%;background:#4CAF50"></div></div></div>
+<div class=ot>Other possibilities</div>${d.all_predictions.slice(1).map(p=>`<div class=oi><span>${p.name}</span><span>${p.confidence}%</span></div>`).join('')}</div>`;
+}catch(e){document.getElementById('load').style.display='none';document.getElementById('btn').disabled=false;
+document.getElementById('result').innerHTML='<p style=color:red;text-align:center;padding:20px>Something went wrong. Try again.</p>';}}
+</script></body></html>

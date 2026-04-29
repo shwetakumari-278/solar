@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriLens — AI Food Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f0a;
+    --surface: #141710;
+    --card: #1a1e14;
+    --border: #2a2f22;
+    --accent: #a8e063;
+    --accent2: #f7c948;
+    --accent3: #ff6b6b;
+    --accent4: #64d8cb;
+    --text: #e8edd8;
+    --muted: #7a8569;
+    --good: #a8e063;
+    --moderate: #f7c948;
+    --risky: #ff6b6b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(168,224,99,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(247,201,72,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    margin-bottom: 28px;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 16px;
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 20px;
+    padding: 56px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--card);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .upload-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(168,224,99,0.04) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: #1d2218;
+  }
+  .upload-zone:hover::before, .upload-zone.drag-over::before {
+    opacity: 1;
+  }
+  .upload-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 20px;
+    background: rgba(168,224,99,0.1);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .upload-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .upload-desc {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .upload-formats {
+    display: inline-flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .fmt-badge {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+
+  /* Preview */
+  #preview-wrap {
+    display: none;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  #preview-img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+  }
+  .preview-overlay {
+    position: absolute;
+    top: 12px; right: 12px;
+  }
+  .remove-btn {
+    background: rgba(0,0,0,0.7);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s;
+  }
+  .remove-btn:hover { background: rgba(255,107,107,0.8); }
+
+  /* Analyze button */
+  .analyze-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--accent);
+    color: #0d0f0a;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-transform: uppercase;
+  }
+  .analyze-btn:hover:not(:disabled) {
+    background: #bfef7a;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 40px rgba(168,224,99,0.25);
+  }
+  .analyze-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Loading */
+  #loading {
+    display: none;
+    text-align: center;
+    padding: 60px 32px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    margin-top: 32px;
+  }
+  .loader-ring {
+    width: 56px; height: 56px;
+    margin: 0 auto 24px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .loading-steps {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 20px;
+    text-align: left;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+  .step-item.active { color: var(--accent); }
+  .step-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .step-item.active .step-dot { background: var(--accent); }
+
+  /* Results */
+  #results {
+    display: none;
+    margin-top: 32px;
+    animation: fadeUp 0.5s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: gap;
+  }
+  .results-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+  }
+  .health-badge {
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .health-badge.good { background: rgba(168,224,99,0.15); color: var(--good); border: 1px solid rgba(168,224,99,0.3); }
+  .health-badge.moderate { background: rgba(247,201,72,0.15); color: var(--moderate); border: 1px solid rgba(247,201,72,0.3); }
+  .health-badge.risky { background: rgba(255,107,107,0.15); color: var(--risky); border: 1px solid rgba(255,107,107,0.3); }
+
+  /* Section cards */
+  .section-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Calories big display */
+  .calories-display {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .cal-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .cal-unit {
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* Macro bars */
+  .macro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .macro-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .macro-name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .macro-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .macro-label {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .macro-bar-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .macro-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+  }
+
+  /* Foods list */
+  .food-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .food-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .food-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .food-emoji { font-size: 22px; }
+  .food-name {
+    font-weight: 500;
+    font-size: 15px;
+  }
+  .food-portion {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .food-cals {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+
+  /* Diabetic section */
+  .diabetic-section {
+    background: rgba(255,107,107,0.05);
+    border-color: rgba(255,107,107,0.2);
+  }
+  .gi-item {
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid rgba(255,107,107,0.15);
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .gi-item:last-child { margin-bottom: 0; }
+  .gi-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .gi-food-name { font-weight: 600; font-size: 14px; }
+  .gi-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(255,107,107,0.15);
+    color: var(--risky);
+  }
+  .gi-reason {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .gi-swap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .swap-arrow { color: var(--accent); }
+  .swap-text { color: var(--accent4); font-weight: 500; }
+
+  /* Tips */
+  .tips-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .tip-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent);
+    min-width: 24px;
+    padding-top: 1px;
+  }
+  .tip-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  /* Sodium row */
+  .sodium-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 12px;
+  }
+  .sodium-label { font-size: 14px; color: var(--muted); }
+  .sodium-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* Error */
+  #error-box {
+    display: none;
+    background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-top: 24px;
+    color: var(--risky);
+    font-size: 14px;
+  }
+
+  /* Reset btn */
+  .reset-btn {
+    margin-top: 24px;
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { color: var(--text); border-color: var(--muted); }
+
+  /* Result raw text */
+  #raw-result {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    color: var(--text);
+    margin-top: 16px;
+  }
+
+  input[type="file"] { display: none; }
+
+  @media (max-width: 600px) {
+    .macro-grid { grid-template-columns: 1fr 1fr; }
+    .cal-number { font-size: 52px; }
+    h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="logo-mark">
+      <div class="logo-dot"></div>
+      <span class="logo-text">NutriLens AI</span>
+    </div>
+    <h1>Know What<br>You <span>Eat.</span></h1>
+    <p class="subtitle">Upload a photo of your meal. AI instantly identifies every food, calculates nutrition, and gives personalized health insights for diabetic users.</p>
+  </header>
+
+  <!-- Upload zone -->
+  <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+    <div class="upload-icon">🍽️</div>
+    <div class="upload-title">Drop your meal photo here</div>
+    <div class="upload-desc">or click to browse your device</div>
+    <div class="upload-formats">
+      <span class="fmt-badge">JPG</span>
+      <span class="fmt-badge">PNG</span>
+      <span class="fmt-badge">WEBP</span>
+      <span class="fmt-badge">HEIC</span>
+    </div>
+  </div>
+  <input type="file" id="file-input" accept="image/*">
+
+  <!-- Image preview -->
+  <div id="preview-wrap">
+    <img id="preview-img" alt="Your meal">
+    <div class="preview-overlay">
+      <button class="remove-btn" onclick="resetAll()">✕ Remove</button>
+    </div>
+  </div>
+
+  <!-- Analyze button -->
+  <button class="analyze-btn" id="analyze-btn" onclick="analyzeFood()" disabled>
+    <span>🔬</span> Analyze My Meal
+  </button>
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="loader-ring"></div>
+    <div class="loading-title">Analyzing your meal…</div>
+    <div class="loading-steps">This usually takes 10–20 seconds</div>
+    <div class="step-list" id="step-list">
+      <div class="step-item active" id="s1"><div class="step-dot"></div>Identifying food items</div>
+      <div class="step-item" id="s2"><div class="step-dot"></div>Estimating portion sizes</div>
+      <div class="step-item" id="s3"><div class="step-dot"></div>Calculating nutritional values</div>
+      <div class="step-item" id="s4"><div class="step-dot"></div>Performing diabetic health analysis</div>
+      <div class="step-item" id="s5"><div class="step-dot"></div>Generating summary & tips</div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div id="error-box"></div>
+
+  <!-- Results -->
+  <div id="results">
+    <div class="results-header">
+      <div class="results-title">Nutrition Report</div>
+      <div class="health-badge" id="health-badge"></div>
+    </div>
+
+    <!-- Calories + Macros -->
+    <div class="section-card">
+      <div class="section-label">Calorie Summary</div>
+      <div class="calories-display">
+        <span class="cal-number" id="cal-display">—</span>
+        <span class="cal-unit">kcal total</span>
+      </div>
+      <div style="color:var(--muted);font-size:13px" id="cal-note"></div>
+      <div class="macro-grid">
+        <div class="macro-item">
+          <div class="macro-name">Protein</div>
+          <div class="macro-value" id="protein-val" style="color:#64d8cb">—</div>
+          <div class="macro-label">grams</div>
+          <div class="macro-bar-track"><div class="macro-bar-fill" id="protein-bar" style="background:#64d8cb;width:0%"></div></div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-name">Carbs</div>
+          <div class="macro-value" id="carbs-val" style="color:#f7c948">—</div>
+          <div class="macro-label">grams</div>
+          <div class="macro-bar-track"><div class="macro-bar-fill" id="carbs-bar" style="background:#f7c948;width:0%"></div></div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-name">Fat</div>
+          <div class="macro-value" id="fat-val" style="color:#ff9f7a">—</div>
+          <div class="macro-label">grams</div>
+          <div class="macro-bar-track"><div class="macro-bar-fill" id="fat-bar" style="background:#ff9f7a;width:0%"></div></div>
+        </div>
+      </div>
+      <div class="sodium-row">
+        <span class="sodium-label">🧂 Sodium</span>
+        <span class="sodium-value" id="sodium-val">— mg</span>
+      </div>
+    </div>
+
+    <!-- Food items identified -->
+    <div class="section-card">
+      <div class="section-label">Foods Identified</div>
+      <div class="food-items-list" id="food-items-list"></div>
+    </div>
+
+    <!-- Diabetic analysis -->
+    <div class="section-card diabetic-section" id="diabetic-section">
+      <div class="section-label">🩺 Diabetic Health Analysis</div>
+      <div id="diabetic-content"></div>
+    </div>
+
+    <!-- Tips -->
+    <div class="section-card">
+      <div class="section-label">💡 Practical Improvement Tips</div>
+      <div class="tips-list" id="tips-list"></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">↩ Analyze Another Meal</button>
+  </div>
+
+</div>
+
+<script>
+let imageBase64 = null;
+let stepTimer = null;
+
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+
+// Drag and drop
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadImage(file);
+});
+
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) loadImage(fileInput.files[0]);
+});
+
+function loadImage(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const dataUrl = e.target.result;
+    imageBase64 = dataUrl.split(',')[1];
+    document.getElementById('preview-img').src = dataUrl;
+    document.getElementById('preview-wrap').style.display = 'block';
+    dropZone.style.display = 'none';
+    document.getElementById('analyze-btn').disabled = false;
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('error-box').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetAll() {
+  imageBase64 = null;
+  fileInput.value = '';
+  document.getElementById('preview-wrap').style.display = 'none';
+  document.getElementById('preview-img').src = '';
+  dropZone.style.display = 'block';
+  document.getElementById('analyze-btn').disabled = true;
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+  if (stepTimer) clearInterval(stepTimer);
+}
+
+function animateSteps() {
+  const steps = ['s1','s2','s3','s4','s5'];
+  let i = 0;
+  stepTimer = setInterval(() => {
+    if (i > 0) document.getElementById(steps[i-1])?.classList.remove('active');
+    if (i < steps.length) {
+      document.getElementById(steps[i])?.classList.add('active');
+      i++;
+    } else {
+      clearInterval(stepTimer);
+    }
+  }, 3000);
+}
+
+async function analyzeFood() {
+  if (!imageBase64) return;
+
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+  document.getElementById('analyze-btn').disabled = true;
+  animateSteps();
+
+  const prompt = `You are an expert nutritionist and dietician AI. Analyze the food image provided and return a structured JSON report.
+
+Respond ONLY with a valid JSON object (no markdown, no backticks, no explanation), exactly in this format:
+
+{
+  "foods": [
+    {
+      "name": "Food Item Name",
+      "emoji": "🍛",
+      "portion": "1 medium bowl (~200g)",
+      "calories": 320
+    }
+  ],
+  "nutrition": {
+    "total_calories": 650,
+    "protein_g": 22,
+    "carbs_g": 80,
+    "fat_g": 18,
+    "sodium_mg": 740
+  },
+  "health_rating": "Moderate",
+  "health_rating_reason": "Brief one-line reason for the rating",
+  "diabetic_analysis": [
+    {
+      "food": "White Rice",
+      "gi_level": "High",
+      "reason": "White rice has a high glycemic index (~72) causing rapid blood sugar spikes.",
+      "swap": "Replace with brown rice or cauliflower rice for lower GI"
+    }
+  ],
+  "portion_advice": "General portion control advice for diabetics in 1-2 sentences.",
+  "tips": [
+    "Tip 1 as a practical actionable advice",
+    "Tip 2 as a practical actionable advice",
+    "Tip 3 as a practical actionable advice"
+  ]
+}
+
+Health rating must be exactly one of: "Good", "Moderate", or "Risky"
+If no high-GI foods are detected, return an empty diabetic_analysis array with a note in portion_advice.
+Be realistic, accurate, and practical. Use real nutritional knowledge.`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{
+          role: "user",
+          content: [
+            {
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: "image/jpeg",
+                data: imageBase64
+              }
+            },
+            { type: "text", text: prompt }
+          ]
+        }]
+      })
+    });
+
+    const data = await response.json();
+    if (stepTimer) clearInterval(stepTimer);
+    document.getElementById('loading').style.display = 'none';
+
+    if (data.error) throw new Error(data.error.message);
+
+    const raw = data.content[0]?.text || '';
+    let cleaned = raw.replace(/```json|```/g, '').trim();
+    const report = JSON.parse(cleaned);
+    renderResults(report);
+
+  } catch (err) {
+    if (stepTimer) clearInterval(stepTimer);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('analyze-btn').disabled = false;
+    const errorBox = document.getElementById('error-box');
+    errorBox.style.display = 'block';
+    errorBox.textContent = '⚠️ ' + (err.message || 'Something went wrong. Please try again with a clear food photo.');
+  }
+}
+
+function renderResults(r) {
+  // Health badge
+  const badge = document.getElementById('health-badge');
+  badge.textContent = r.health_rating;
+  badge.className = 'health-badge ' + r.health_rating.toLowerCase();
+
+  // Calories
+  document.getElementById('cal-display').textContent = r.nutrition.total_calories;
+  document.getElementById('cal-note').textContent = r.health_rating_reason || '';
+
+  // Macros
+  const protein = r.nutrition.protein_g;
+  const carbs = r.nutrition.carbs_g;
+  const fat = r.nutrition.fat_g;
+  const total = protein + carbs + fat || 1;
+
+  document.getElementById('protein-val').textContent = protein;
+  document.getElementById('carbs-val').textContent = carbs;
+  document.getElementById('fat-val').textContent = fat;
+  document.getElementById('sodium-val').textContent = (r.nutrition.sodium_mg || '—') + ' mg';
+
+  setTimeout(() => {
+    document.getElementById('protein-bar').style.width = Math.min(100, (protein/total)*100) + '%';
+    document.getElementById('carbs-bar').style.width = Math.min(100, (carbs/total)*100) + '%';
+    document.getElementById('fat-bar').style.width = Math.min(100, (fat/total)*100) + '%';
+  }, 300);
+
+  // Food items
+  const foodList = document.getElementById('food-items-list');
+  foodList.innerHTML = '';
+  (r.foods || []).forEach(f => {
+    foodList.innerHTML += `
+      <div class="food-item-row">
+        <div class="food-item-left">
+          <span class="food-emoji">${f.emoji || '🍽️'}</span>
+          <div>
+            <div class="food-name">${f.name}</div>
+            <div class="food-portion">${f.portion}</div>
+          </div>
+        </div>
+        <div class="food-cals">~${f.calories} kcal</div>
+      </div>`;
+  });
+
+  // Diabetic analysis
+  const diabeticContent = document.getElementById('diabetic-content');
+  diabeticContent.innerHTML = '';
+  if (r.diabetic_analysis && r.diabetic_analysis.length > 0) {
+    r.diabetic_analysis.forEach(d => {
+      diabeticContent.innerHTML += `
+        <div class="gi-item">
+          <div class="gi-top">
+            <span class="gi-food-name">${d.food}</span>
+            <span class="gi-badge">GI: ${d.gi_level}</span>
+          </div>
+          <div class="gi-reason">${d.reason}</div>
+          <div class="gi-swap"><span class="swap-arrow">→</span><span class="swap-text">${d.swap}</span></div>
+        </div>`;
+    });
+  } else {
+    diabeticContent.innerHTML = `<div class="gi-item"><div class="gi-reason" style="color:var(--accent)">✅ No high-GI foods detected. This meal appears relatively safe for diabetic users.</div></div>`;
+  }
+  if (r.portion_advice) {
+    diabeticContent.innerHTML += `<div style="margin-top:12px;font-size:13px;color:var(--muted);padding:12px 16px;background:var(--surface);border-radius:8px;border:1px solid var(--border);">
+      <strong style="color:var(--text)">Portion advice:</strong> ${r.portion_advice}
+    </div>`;
+  }
+
+  // Tips
+  const tipsList = document.getElementById('tips-list');
+  tipsList.innerHTML = '';
+  (r.tips || []).forEach((t, i) => {
+    tipsList.innerHTML += `
+      <div class="tip-item">
+        <div class="tip-num">0${i+1}</div>
+        <div class="tip-text">${t}</div>
+      </div>`;
+  });
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('analyze-btn').disabled = false;
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+</body>
+</html>

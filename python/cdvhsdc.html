@@ -1,0 +1,406 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOX - Clear Audio to Captivating Threads</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+    
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+    <style>
+        /* Essential base styles to apply fonts via Tailwind arbitrary values seamlessly */
+        .font-serif { font-family: 'Instrument Serif', serif; }
+        .font-sans { font-family: 'Instrument Sans', sans-serif; }
+        
+        /* Ensuring Iconify respects the stroke width requested */
+        iconify-icon {
+            stroke-width: 1.5;
+        }
+    </style>
+</head>
+<body class="bg-[#FBFDFD] text-[#0F172A] font-sans antialiased selection:bg-[#022C22] selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between relative z-10">
+        <a href="#" class="font-serif text-2xl tracking-tighter text-[#022C22] uppercase">VOX</a>
+        
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium text-[#475569]">
+            <a href="#features" class="hover:text-[#022C22] transition-colors">Features</a>
+            <a href="#use-cases" class="hover:text-[#022C22] transition-colors">Use Cases</a>
+            <a href="#pricing" class="hover:text-[#022C22] transition-colors">Pricing</a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <a href="#" class="hidden md:block text-sm font-medium text-[#475569] hover:text-[#022C22] transition-colors">Log in</a>
+            <a href="#" class="bg-[#022C22] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#044731] transition-colors">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-32 px-6 overflow-hidden">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ECFDF5] text-[#047857] text-xs font-medium mb-8 border border-[#D1FAE5]">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#059669] opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-[#059669]"></span>
+                </span>
+                Introducing VOX v2.0
+            </div>
+            
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl tracking-tighter text-[#022C22] leading-[1.05] mb-8">
+                Speak freely. <br> We'll write the rest.
+            </h1>
+            
+            <p class="text-lg md:text-xl text-[#475569] max-w-2xl mx-auto leading-relaxed mb-10 font-normal">
+                Studio-grade noise cancellation meets editorial AI. Record anywhere, get flawless transcripts, and instantly turn your thoughts into compelling Twitter threads.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#" class="w-full sm:w-auto bg-[#022C22] text-white px-8 py-3.5 rounded-full text-sm font-medium hover:bg-[#044731] transition-colors flex items-center justify-center gap-2">
+                    Start recording
+                    <iconify-icon icon="solar:arrow-right-linear" class="text-lg"></iconify-icon>
+                </a>
+                <a href="#" class="w-full sm:w-auto bg-white text-[#022C22] border border-[#E2E8F0] px-8 py-3.5 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
+                    View demo
+                </a>
+            </div>
+        </div>
+
+        <!-- Hero UI Mockup -->
+        <div class="max-w-5xl mx-auto mt-24 relative">
+            <!-- Decorative blur -->
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#FBFDFD]/80 to-[#FBFDFD] z-10 pointer-events-none h-full w-full top-1/2"></div>
+            
+            <div class="bg-white border border-[#E2E8F0] rounded-2xl p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/[0.02]">
+                <div class="bg-[#F8FAFC] rounded-xl border border-[#F1F5F9] overflow-hidden flex flex-col md:flex-row h-auto md:h-[400px]">
+                    <!-- Sidebar/Recording area -->
+                    <div class="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-[#E2E8F0] p-6 flex flex-col justify-between bg-white relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#059669] to-[#34D399]"></div>
+                        
+                        <div>
+                            <div class="flex items-center gap-2 mb-8">
+                                <iconify-icon icon="solar:microphone-3-linear" class="text-[#059669] text-xl"></iconify-icon>
+                                <span class="text-sm font-medium text-[#022C22]">Recording...</span>
+                                <span class="text-xs text-[#64748B] ml-auto font-mono">02:14</span>
+                            </div>
+                            
+                            <!-- Fake Audio Waveform -->
+                            <div class="flex items-end justify-center gap-1 h-24 mb-6 opacity-80">
+                                <div class="w-1.5 bg-[#059669] rounded-full h-1/4 animate-[pulse_1s_ease-in-out_infinite]"></div>
+                                <div class="w-1.5 bg-[#059669] rounded-full h-2/4 animate-[pulse_1.2s_ease-in-out_infinite]"></div>
+                                <div class="w-1.5 bg-[#059669] rounded-full h-full animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+                                <div class="w-1.5 bg-[#059669] rounded-full h-3/4 animate-[pulse_1.5s_ease-in-out_infinite]"></div>
+                                <div class="w-1.5 bg-[#059669] rounded-full h-2/4 animate-[pulse_1.1s_ease-in-out_infinite]"></div>
+                                <div class="w-1.5 bg-[#E2E8F0] rounded-full h-1/4"></div>
+                                <div class="w-1.5 bg-[#E2E8F0] rounded-full h-1/3"></div>
+                                <div class="w-1.5 bg-[#E2E8F0] rounded-full h-1/5"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <button class="w-12 h-12 rounded-full border border-[#E2E8F0] flex items-center justify-center text-[#64748B] hover:text-[#022C22] hover:bg-gray-50 transition-colors">
+                                <iconify-icon icon="solar:pause-linear" class="text-xl"></iconify-icon>
+                            </button>
+                            <button class="px-5 py-2.5 bg-[#022C22] text-white rounded-full text-sm font-medium flex items-center gap-2">
+                                <iconify-icon icon="solar:stop-circle-linear" class="text-lg"></iconify-icon>
+                                End &amp; Process
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Output area -->
+                    <div class="w-full md:w-2/3 p-8 flex flex-col">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex gap-4 border-b border-[#E2E8F0] w-full pb-2">
+                                <span class="text-sm font-medium text-[#022C22] border-b-2 border-[#022C22] pb-2 -mb-[9px]">Transcript</span>
+                                <span class="text-sm font-medium text-[#94A3B8] pb-2">Twitter Thread</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 overflow-hidden relative">
+                            <p class="text-[#334155] leading-relaxed font-serif text-xl">
+                                "So I was thinking about how most audio tools completely ignore the environment you're in. <span class="bg-[#ECFDF5] text-[#047857] px-1 rounded">Like yesterday, I was walking by a construction site</span> and trying to record a note about..."
+                            </p>
+                            <div class="mt-6 p-4 bg-white border border-[#E2E8F0] rounded-lg shadow-sm">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <iconify-icon icon="solar:pen-new-square-linear" class="text-[#059669]"></iconify-icon>
+                                    <span class="text-xs font-medium text-[#475569] uppercase tracking-wider">Generated Hook</span>
+                                </div>
+                                <p class="text-sm text-[#022C22] font-medium">
+                                    Most audio tools fail the "real world" test. Yesterday I recorded a podcast walking past a construction site. Here is how AI salvaged the audio (and why standard noise cancellation is dead): 🧵
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Grid Features -->
+    <section id="features" class="py-24 px-6 bg-white border-y border-[#F1F5F9]">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-16">
+                <h2 class="font-serif text-3xl md:text-5xl tracking-tight text-[#022C22] mb-4">Engineered for clarity.</h2>
+                <p class="text-lg text-[#64748B] max-w-xl font-normal">Every feature designed to remove friction between your spoken thoughts and published words.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Large Card 1 -->
+                <div class="col-span-1 md:col-span-2 bg-[#F8FAFA] rounded-2xl p-8 md:p-12 border border-[#E2E8F0] relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
+                        <iconify-icon icon="solar:soundwave-linear" width="120" height="120" class="text-[#022C22]"></iconify-icon>
+                    </div>
+                    <iconify-icon icon="solar:volume-loud-linear" class="text-2xl text-[#059669] mb-6"></iconify-icon>
+                    <h3 class="text-xl font-medium text-[#022C22] mb-3 tracking-tight">Acoustic Isolation AI</h3>
+                    <p class="text-[#475569] leading-relaxed max-w-md">Our neural network analyzes your environment in real-time, stripping away wind, traffic, and background chatter. Your voice remains perfectly intact, as if recorded in a studio.</p>
+                </div>
+
+                <!-- Small Card 1 -->
+                <div class="col-span-1 bg-white rounded-2xl p-8 border border-[#E2E8F0] shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <iconify-icon icon="solar:document-text-linear" class="text-2xl text-[#022C22] mb-6"></iconify-icon>
+                    <h3 class="text-lg font-medium text-[#022C22] mb-3 tracking-tight">Flawless Transcripts</h3>
+                    <p class="text-sm text-[#475569] leading-relaxed">Captures nuances, filler words (if you want), and industry-specific jargon with 99% accuracy across 40+ languages.</p>
+                </div>
+
+                <!-- Small Card 2 -->
+                <div class="col-span-1 bg-white rounded-2xl p-8 border border-[#E2E8F0] shadow-[0_2px_10px_rgb(0,0,0,0.02)]">
+                    <iconify-icon icon="solar:magic-stick-3-linear" class="text-2xl text-[#022C22] mb-6"></iconify-icon>
+                    <h3 class="text-lg font-medium text-[#022C22] mb-3 tracking-tight">Viral Hook Generation</h3>
+                    <p class="text-sm text-[#475569] leading-relaxed">AI analyzes your transcript and generates compelling Twitter hooks designed to stop the scroll and drive engagement.</p>
+                </div>
+
+                <!-- Large Card 2 -->
+                <div class="col-span-1 md:col-span-2 bg-[#022C22] rounded-2xl p-8 md:p-12 relative overflow-hidden">
+                    <!-- Subtle background pattern -->
+                    <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    
+                    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 h-full">
+                        <div class="max-w-sm">
+                            <iconify-icon icon="solar:share-circle-linear" class="text-2xl text-[#34D399] mb-6"></iconify-icon>
+                            <h3 class="text-xl font-medium text-white mb-3 tracking-tight">Seamless Formatting</h3>
+                            <p class="text-[#94A3B8] leading-relaxed text-sm">Automatically breaks down long monologues into numbered threads, preserving context and adding appropriate spacing.</p>
+                        </div>
+                        
+                        <!-- Visual representation of thread -->
+                        <div class="w-full md:w-auto bg-[#044731] rounded-xl p-4 border border-[#065F42] shadow-inner">
+                            <div class="flex gap-3 mb-3">
+                                <div class="w-8 h-8 rounded-full bg-[#022C22] flex-shrink-0"></div>
+                                <div class="space-y-2 w-full">
+                                    <div class="h-2 w-24 bg-[#065F42] rounded"></div>
+                                    <div class="h-2 w-full bg-[#065F42] rounded"></div>
+                                    <div class="h-2 w-4/5 bg-[#065F42] rounded"></div>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 relative">
+                                <div class="absolute left-4 top-[-10px] bottom-full w-0.5 bg-[#065F42]"></div>
+                                <div class="w-8 h-8 rounded-full bg-[#022C22] flex-shrink-0"></div>
+                                <div class="space-y-2 w-full mt-1">
+                                    <div class="h-2 w-full bg-[#065F42] rounded"></div>
+                                    <div class="h-2 w-3/4 bg-[#065F42] rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Situations / Editorial Text -->
+    <section id="use-cases" class="py-32 px-6">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-16 md:gap-24">
+            <div class="w-full md:w-1/3">
+                <div class="sticky top-12">
+                    <h2 class="font-serif text-3xl md:text-4xl tracking-tight text-[#022C22] mb-6">Capture the moment, perfectly.</h2>
+                    <p class="text-[#64748B] text-sm leading-relaxed">Inspiration rarely strikes when you are sitting quietly at your desk. VOX is built for the real world.</p>
+                </div>
+            </div>
+            
+            <div class="w-full md:w-2/3 space-y-16">
+                <!-- Situation 1 -->
+                <div class="group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F5F9] text-[#022C22] text-xs font-medium group-hover:bg-[#022C22] group-hover:text-white transition-colors">01</span>
+                        <h3 class="text-xl font-medium tracking-tight text-[#022C22]">The Walking Meeting</h3>
+                    </div>
+                    <p class="text-[#475569] leading-relaxed pl-12 font-serif text-lg">
+                        You're pacing the busy streets, synthesizing ideas. Traffic is loud, the wind is howling. VOX isolates your voice and drafts your strategic thesis into a clear, readable document before you return to the office.
+                    </p>
+                </div>
+
+                <!-- Situation 2 -->
+                <div class="group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F5F9] text-[#022C22] text-xs font-medium group-hover:bg-[#022C22] group-hover:text-white transition-colors">02</span>
+                        <h3 class="text-xl font-medium tracking-tight text-[#022C22]">The Sudden Epiphany</h3>
+                    </div>
+                    <p class="text-[#475569] leading-relaxed pl-12 font-serif text-lg">
+                        It's 2 AM or you're driving. You have a profound thought but can't type. Tap record, ramble for five minutes. VOX will extract the core insight and generate a punchy 3-part thread ready to publish.
+                    </p>
+                </div>
+
+                <!-- Situation 3 -->
+                <div class="group">
+                    <div class="flex items-center gap-4 mb-4">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-[#F1F5F9] text-[#022C22] text-xs font-medium group-hover:bg-[#022C22] group-hover:text-white transition-colors">03</span>
+                        <h3 class="text-xl font-medium tracking-tight text-[#022C22]">The Brain Dump</h3>
+                    </div>
+                    <p class="text-[#475569] leading-relaxed pl-12 font-serif text-lg">
+                        You have an article to write but staring at a blank page is daunting. Talk it out. Our engine removes your "ums" and "ahs", structuring your raw thoughts into a cohesive first draft.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial -->
+    <section class="py-24 px-6 bg-[#F8FAFA] border-y border-[#F1F5F9]">
+        <div class="max-w-4xl mx-auto text-center">
+            <iconify-icon icon="solar:quote-right-linear" class="text-4xl text-[#D1D5DB] mb-8"></iconify-icon>
+            <h2 class="font-serif text-3xl md:text-5xl leading-tight text-[#022C22] tracking-tight mb-10">
+                "It feels like having a ghostwriter in my pocket. I record messy voice notes while walking the dog, and come back to polished, engaging threads that actually sound like me."
+            </h2>
+            <div class="flex items-center justify-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                    <img src="https://i.pravatar.cc/150?img=32" alt="Avatar" class="w-full h-full object-cover grayscale opacity-80">
+                </div>
+                <div class="text-left">
+                    <div class="text-sm font-medium text-[#022C22]">Sarah Jenkins</div>
+                    <div class="text-xs text-[#64748B]">Founder &amp; Creator</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-32 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-serif text-3xl md:text-5xl tracking-tight text-[#022C22] mb-4">Simple, transparent pricing.</h2>
+                <p class="text-[#64748B] text-lg font-normal">Start for free, upgrade when you need more power.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Free Tier -->
+                <div class="bg-white rounded-3xl p-10 border border-[#E2E8F0]">
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-[#022C22] mb-2">Basic</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-serif tracking-tight text-[#022C22]">$0</span>
+                            <span class="text-[#64748B] text-sm">/month</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-start gap-3 text-sm text-[#475569]">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[#059669] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span>10 hours of transcription per month</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-[#475569]">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[#059669] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span>Standard noise cancellation</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-[#475569]">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[#059669] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span>Basic thread generation</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-[#475569] opacity-50">
+                            <iconify-icon icon="solar:close-circle-linear" class="text-[#94A3B8] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span>Custom hook AI styles</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#" class="block w-full text-center bg-white text-[#022C22] border border-[#E2E8F0] py-3 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors">
+                        Get Started
+                    </a>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="bg-[#022C22] rounded-3xl p-10 border border-[#044731] shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-[#34D399] text-[#022C22] text-xs font-medium px-4 py-1.5 rounded-bl-xl rounded-tr-3xl">
+                        Popular
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-white mb-2">Creator Pro</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-serif tracking-tight text-white">$24</span>
+                            <span class="text-[#94A3B8] text-sm">/month</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-start gap-3 text-sm text-gray-300">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[#34D399] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span class="text-white">Unlimited transcription</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-gray-300">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[#34D399] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span class="text-white">Studio-grade Acoustic Isolation AI</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-gray-300">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[#34D399] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span class="text-white">Advanced viral thread algorithms</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-gray-300">
+                            <iconify-icon icon="solar:check-circle-linear" class="text-[#34D399] text-lg flex-shrink-0 mt-0.5"></iconify-icon>
+                            <span class="text-white">Custom hook AI styles &amp; tone matching</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#" class="block w-full text-center bg-white text-[#022C22] py-3 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
+                        Upgrade to Pro
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="px-4 sm:px-6 mb-12">
+        <div class="max-w-6xl mx-auto bg-[#022C22] rounded-[2.5rem] py-24 px-6 text-center relative overflow-hidden">
+            <!-- Decorative circles -->
+            <div class="absolute top-0 left-0 w-64 h-64 bg-[#044731] rounded-full blur-3xl opacity-50 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+            <div class="absolute bottom-0 right-0 w-64 h-64 bg-[#059669] rounded-full blur-3xl opacity-20 translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+            
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <h2 class="font-serif text-4xl md:text-5xl lg:text-6xl tracking-tighter text-white mb-6">
+                    Ready to find your voice?
+                </h2>
+                <p class="text-[#94A3B8] text-lg mb-10 font-normal">
+                    Join thousands of creators who are turning their spoken ideas into published content in seconds.
+                </p>
+                
+                <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <input type="email" placeholder="Enter your email" class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/50 px-6 py-3.5 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#34D399] focus:border-transparent transition-all backdrop-blur-sm" required="">
+                    <button type="submit" class="bg-white text-[#022C22] px-8 py-3.5 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors shadow-lg">
+                        Start for free
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto px-6 py-12 border-t border-[#F1F5F9] flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-2">
+            <span class="font-serif text-xl tracking-tighter text-[#022C22]">VOX</span>
+            <span class="text-[#94A3B8] text-sm">© 2024. All rights reserved.</span>
+        </div>
+        
+        <div class="flex items-center gap-8 text-sm text-[#64748B]">
+            <a href="#" class="hover:text-[#022C22] transition-colors">Privacy</a>
+            <a href="#" class="hover:text-[#022C22] transition-colors">Terms</a>
+            <a href="#" class="hover:text-[#022C22] transition-colors">Twitter</a>
+        </div>
+    </footer>
+
+
+</body></html>
